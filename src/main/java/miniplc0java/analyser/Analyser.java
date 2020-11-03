@@ -277,7 +277,7 @@ public final class Analyser {
         // 语句序列 -> 语句*
         // 语句 -> 赋值语句 | 输出语句 | 空语句
 
-        while (true) {
+        while (check(TokenType.Ident) || check(TokenType.Print) || check(TokenType.Semicolon)) {
             var peeked = peek();
             // 如果下一个 token 是……
             // 调用相应的分析函数
@@ -318,7 +318,7 @@ public final class Analyser {
         // 项
         analyseItem();
 
-        while (true) {
+        while (check(TokenType.Plus) || check(TokenType.Minus)) {
             // 预读可能是运算符的 token
             var op = peek();
             if (op.getTokenType() != TokenType.Plus && op.getTokenType() != TokenType.Minus) {
@@ -387,18 +387,18 @@ public final class Analyser {
         // 因子
         analyseFactor();
 
-        boolean multi;
-        while (true) {
+        boolean isMulti;
+        while (check(TokenType.Mult) || check(TokenType.Div)) {
             // 预读可能是运算符的 token
             Token op = peek();
 
             // 运算符
             if (op.getTokenType().equals(TokenType.Mult)){
-                multi = true;
+                isMulti = true;
                 next();
             }
             else {
-                multi = false;
+                isMulti = false;
                 expect(TokenType.Div);
             }
 
@@ -406,7 +406,7 @@ public final class Analyser {
             analyseFactor();
 
             // 生成代码
-            if (multi) {
+            if (isMulti) {
                 instructions.add(new Instruction(Operation.MUL));
             } else {
                 instructions.add(new Instruction(Operation.DIV));

@@ -56,7 +56,7 @@ public class Tokenizer {
         // 解析成功则返回无符号整数类型的token，否则返回编译错误
         //
         // Token 的 Value 应填写数字的值
-        Pos last_position = it.currentPos();//还是previousPos?
+        Pos last_position = it.previousPos();//还是previousPos?
         try {
             int value = Integer.parseInt(num.toString());
             return new Token(TokenType.Uint,value,first_position,last_position);
@@ -83,7 +83,7 @@ public class Tokenizer {
         // -- 否则，返回标识符
         //
         // Token 的 Value 应填写标识符或关键字的字符串
-        Pos last_position = it.currentPos();//还是previousPos?
+        Pos last_position = it.previousPos();//还是previousPos?
         String w = word.toString();
         switch (w) {
             case "begin":
@@ -104,37 +104,37 @@ public class Tokenizer {
     private Token lexOperatorOrUnknown() throws TokenizeError {
         switch (it.nextChar()) {
             case '+':
-                return new Token(TokenType.Plus, '+', it.previousPos(), it.currentPos());
+                return new Token(TokenType.Plus, '+', it.currentPos(), it.currentPos());
 
             case '-':
                 // 填入返回语句
-                return new Token(TokenType.Minus, '-', it.previousPos(), it.currentPos());
+                return new Token(TokenType.Minus, '-', it.currentPos(), it.currentPos());
 
             case '*':
                 // 填入返回语句
-                return new Token(TokenType.Mult, '*', it.previousPos(), it.currentPos());
+                return new Token(TokenType.Mult, '*', it.currentPos(), it.currentPos());
 
             case '/':
                 // 填入返回语句
-                return new Token(TokenType.Div, '/', it.previousPos(), it.currentPos());
+                return new Token(TokenType.Div, '/', it.currentPos(), it.currentPos());
 
             // 填入更多状态和返回语句
 
             case '=':
-                return new Token(TokenType.Equal, '=', it.previousPos(), it.currentPos());
+                return new Token(TokenType.Equal, '=', it.currentPos(), it.currentPos());
 
             case ';':
-                return new Token(TokenType.Semicolon, ';', it.previousPos(), it.currentPos());
+                return new Token(TokenType.Semicolon, ';', it.currentPos(), it.currentPos());
 
             case '(':
-                return new Token(TokenType.LParen, '(', it.previousPos(), it.currentPos());
+                return new Token(TokenType.LParen, '(', it.currentPos(), it.currentPos());
 
             case ')':
-                return new Token(TokenType.RParen, ')', it.previousPos(), it.currentPos());
+                return new Token(TokenType.RParen, ')', it.currentPos(), it.currentPos());
 
             default:
                 // 不认识这个输入，摸了
-                throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
+                throw new TokenizeError(ErrorCode.InvalidInput, it.currentPos());
         }
     }
 
