@@ -56,7 +56,7 @@ public class Tokenizer {
         // 解析成功则返回无符号整数类型的token，否则返回编译错误
         //
         // Token 的 Value 应填写数字的值
-        Pos last_position = it.currentPos();
+        Pos last_position = it.currentPos();//还是previousPos?
         try {
             int value = Integer.parseInt(num.toString());
             return new Token(TokenType.Uint,value,first_position,last_position);
@@ -83,7 +83,7 @@ public class Tokenizer {
         // -- 否则，返回标识符
         //
         // Token 的 Value 应填写标识符或关键字的字符串
-        Pos last_position = it.currentPos();
+        Pos last_position = it.currentPos();//还是previousPos?
         String w = word.toString();
         switch (w) {
             case "begin":
@@ -108,17 +108,29 @@ public class Tokenizer {
 
             case '-':
                 // 填入返回语句
-                throw new Error("Not implemented");
+                return new Token(TokenType.Minus, '-', it.previousPos(), it.currentPos());
 
             case '*':
                 // 填入返回语句
-                throw new Error("Not implemented");
+                return new Token(TokenType.Mult, '*', it.previousPos(), it.currentPos());
 
             case '/':
                 // 填入返回语句
-                throw new Error("Not implemented");
+                return new Token(TokenType.Div, '/', it.previousPos(), it.currentPos());
 
             // 填入更多状态和返回语句
+
+            case '=':
+                return new Token(TokenType.Equal, '=', it.previousPos(), it.currentPos());
+
+            case ';':
+                return new Token(TokenType.Semicolon, ';', it.previousPos(), it.currentPos());
+
+            case '(':
+                return new Token(TokenType.LParen, '(', it.previousPos(), it.currentPos());
+
+            case ')':
+                return new Token(TokenType.RParen, ')', it.previousPos(), it.currentPos());
 
             default:
                 // 不认识这个输入，摸了
